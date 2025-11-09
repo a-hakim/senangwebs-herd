@@ -1,208 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SenangWebs Herd - Examples</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 60px;
-        }
-        
-        header h1 {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-        
-        header p {
-            font-size: 20px;
-            opacity: 0.9;
-        }
-        
-        .examples-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-        
-        .example-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        
-        .example-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .example-card .icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        
-        .example-card h2 {
-            color: #667eea;
-            margin-bottom: 12px;
-            font-size: 24px;
-        }
-        
-        .example-card p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        
-        .example-card .features {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .example-card .features li {
-            padding: 6px 0;
-            color: #888;
-            font-size: 14px;
-        }
-        
-        .example-card .features li:before {
-            content: "✓ ";
-            color: #27ae60;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-        
-        .docs-section {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .docs-section h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 32px;
-        }
-        
-        .docs-section h3 {
-            color: #764ba2;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-        
-        .docs-section pre {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 15px 0;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .docs-section code {
-            background: #f5f5f5;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .docs-section p {
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        footer {
-            text-align: center;
-            color: white;
-            margin-top: 60px;
-            opacity: 0.8;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🎯 SenangWebs Herd</h1>
-            <p>Examples & Documentation</p>
-        </header>
-        
-        <div class="examples-grid">
-            <a href="basic-html-attribute.html" class="example-card">
-                <div class="icon">📄</div>
-                <h2>Basic HTML Attribute</h2>
-                <p>The simplest way to use SWH with data attributes.</p>
-                <ul class="features">
-                    <li>HTML-only initialization</li>
-                    <li>Preset tabs in markup</li>
-                    <li>State persistence</li>
-                    <li>Tab closing enabled</li>
-                </ul>
-            </a>
-            
-            <a href="javascript-init.html" class="example-card">
-                <div class="icon">⚙️</div>
-                <h2>JavaScript Initialization</h2>
-                <p>Programmatic setup with dynamic controls.</p>
-                <ul class="features">
-                    <li>JavaScript configuration</li>
-                    <li>Dynamic tab creation</li>
-                    <li>API method demos</li>
-                    <li>Runtime controls</li>
-                </ul>
-            </a>
-            
-            <a href="event-handling.html" class="example-card">
-                <div class="icon">📊</div>
-                <h2>Event Handling</h2>
-                <p>Advanced event system with real-time monitoring.</p>
-                <ul class="features">
-                    <li>Event monitoring</li>
-                    <li>Statistics dashboard</li>
-                    <li>Event log</li>
-                    <li>Visual feedback</li>
-                </ul>
-            </a>
-        </div>
-        
-        <div class="docs-section">
-            <h2>🚀 Quick Start</h2>
-            
-            <h3>Installation</h3>
-            <p>Include the CSS and JavaScript files in your HTML:</p>
-            <pre>&lt;link rel="stylesheet" href="path/to/swh.css"&gt;
-&lt;script src="path/to/swh.js"&gt;&lt;/script&gt;</pre>
-            
-            <h3>HTML Initialization</h3>
-            <pre>&lt;div data-swh
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen py-10 px-5 bg-gray-100">
+    <div class="max-w-6xl mx-auto">
+      <header class="text-center mb-16">
+        <h1 class="text-5xl font-bold mb-4">SenangWebs Herd</h1>
+        <p class="text-xl opacity-90">Examples & Documentation</p>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <a
+          href="basic-html-attribute.html"
+          class="bg-white rounded-xl p-8 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 block no-underline text-inherit"
+        >
+          <h2 class="text-indigo-600 text-2xl font-bold mb-3">
+            Basic HTML Attribute
+          </h2>
+          <p class="text-gray-600 leading-relaxed mb-5">
+            The simplest way to use SWH with data attributes.
+          </p>
+          <ul class="space-y-2">
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>HTML-only
+              initialization
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Preset tabs in
+              markup
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>State
+              persistence
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Tab closing
+              enabled
+            </li>
+          </ul>
+        </a>
+
+        <a
+          href="javascript-init.html"
+          class="bg-white rounded-xl p-8 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 block no-underline text-inherit"
+        >
+          <h2 class="text-indigo-600 text-2xl font-bold mb-3">
+            JavaScript Initialization
+          </h2>
+          <p class="text-gray-600 leading-relaxed mb-5">
+            Programmatic setup with dynamic controls.
+          </p>
+          <ul class="space-y-2">
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>JavaScript
+              configuration
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Dynamic tab
+              creation
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>API method
+              demos
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Runtime
+              controls
+            </li>
+          </ul>
+        </a>
+
+        <a
+          href="event-handling.html"
+          class="bg-white rounded-xl p-8 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 block no-underline text-inherit"
+        >
+          <h2 class="text-indigo-600 text-2xl font-bold mb-3">
+            Event Handling
+          </h2>
+          <p class="text-gray-600 leading-relaxed mb-5">
+            Advanced event system with real-time monitoring.
+          </p>
+          <ul class="space-y-2">
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Event
+              monitoring
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Statistics
+              dashboard
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Event log
+            </li>
+            <li class="text-gray-500 text-sm">
+              <span class="text-green-600 font-bold mr-2">✓</span>Visual
+              feedback
+            </li>
+          </ul>
+        </a>
+      </div>
+
+      <div class="bg-white rounded-xl p-10 shadow-xl">
+        <h2 class="text-indigo-600 text-3xl font-bold mb-5">Quick Start</h2>
+
+        <h3 class="text-purple-700 text-xl font-semibold mt-8 mb-4">
+          Installation
+        </h3>
+        <p class="leading-relaxed text-gray-700 mb-4">
+          Include the CSS and JavaScript files in your HTML:
+        </p>
+        <pre
+          class="bg-gray-100 p-5 rounded-lg overflow-x-auto my-4 text-sm leading-relaxed"
+        >
+&lt;link rel="stylesheet" href="path/to/swh.css"&gt;
+&lt;script src="path/to/swh.js"&gt;&lt;/script&gt;</pre
+        >
+
+        <h3 class="text-purple-700 text-xl font-semibold mt-8 mb-4">
+          HTML Initialization
+        </h3>
+        <pre
+          class="bg-gray-100 p-5 rounded-lg overflow-x-auto my-4 text-sm leading-relaxed"
+        >
+&lt;div data-swh
      data-swh-storage-key="my-tabs"
      data-swh-default-tab="home"
      data-swh-allow-close&gt;
@@ -216,10 +140,16 @@
         &lt;iframe data-swh-iframe="home" data-url="home.html"&gt;&lt;/iframe&gt;
         &lt;iframe data-swh-iframe="about" data-url="about.html"&gt;&lt;/iframe&gt;
     &lt;/div&gt;
-&lt;/div&gt;</pre>
-            
-            <h3>JavaScript Initialization</h3>
-            <pre>const swh = new SWH({
+&lt;/div&gt;</pre
+        >
+
+        <h3 class="text-purple-700 text-xl font-semibold mt-8 mb-4">
+          JavaScript Initialization
+        </h3>
+        <pre
+          class="bg-gray-100 p-5 rounded-lg overflow-x-auto my-4 text-sm leading-relaxed"
+        >
+const swh = new SWH({
     container: document.querySelector('#swh-container'),
     tabsContainer: document.querySelector('#swh-tabs'),
     contentContainer: document.querySelector('#swh-content'),
@@ -230,10 +160,16 @@
     defaultTab: "home",
     allowClose: true,
     maxTabs: 5
-});</pre>
-            
-            <h3>API Methods</h3>
-            <pre>// Open a new tab
+});</pre
+        >
+
+        <h3 class="text-purple-700 text-xl font-semibold mt-8 mb-4">
+          API Methods
+        </h3>
+        <pre
+          class="bg-gray-100 p-5 rounded-lg overflow-x-auto my-4 text-sm leading-relaxed"
+        >
+// Open a new tab
 swh.openTab('settings', 'Settings', 'settings.html');
 
 // Switch to a tab
@@ -248,25 +184,34 @@ const tabs = swh.getOpenTabs();
 // Listen to events
 swh.on('tabOpened', (data) => {
     console.log('Tab opened:', data);
-});</pre>
-            
-            <h3>Running Examples Locally</h3>
-            <p>To avoid CORS issues with iframes, run a local web server:</p>
-            <pre># Using Python
+});</pre
+        >
+
+        <h3 class="text-purple-700 text-xl font-semibold mt-8 mb-4">
+          Running Examples Locally
+        </h3>
+        <p class="leading-relaxed text-gray-700 mb-4">
+          To avoid CORS issues with iframes, run a local web server:
+        </p>
+        <pre
+          class="bg-gray-100 p-5 rounded-lg overflow-x-auto my-4 text-sm leading-relaxed"
+        >
+# Using Python
 python -m http.server 8000
 
 # Using PHP
 php -S localhost:8000
 
 # Using Node.js
-npx http-server -p 8000</pre>
-            <p>Then visit: <code>http://localhost:8000/examples/</code></p>
-        </div>
-        
-        <footer>
-            <p>SenangWebs Herd &copy; 2025 | MIT License</p>
-            <p>Perfect for dashboards, admin panels, and internal tools</p>
-        </footer>
+npx http-server -p 8000</pre
+        >
+        <p class="leading-relaxed text-gray-700 mb-4">
+          Then visit:
+          <code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono"
+            >http://localhost:8000/examples/</code
+          >
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

@@ -4,53 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SWH - Basic HTML Attribute Example</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../src/css/swh.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html, body {
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-        
-        .container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        header {
-            background-color: #0066cc;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        header h1 {
-            margin-bottom: 8px;
-        }
-        
-        header p {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-        
-        #swh-container {
-            flex: 1;
-            overflow: hidden;
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>SenangWebs Herd</h1>
-            <p>Basic HTML Attribute Initialization Example</p>
-        </header>
+<body class="h-screen flex flex-col">
+    <header class="bg-blue-600 text-white py-5 px-5 text-center">
+        <h1 class="text-2xl font-bold mb-2">SenangWebs Herd</h1>
+        <p class="text-sm opacity-90">Basic HTML Attribute Initialization Example</p>
+    </header>
+    
+    <div class="flex-1 overflow-hidden">
         
         <!-- SWH Container with HTML Attributes -->
         <div id="swh-container" 
