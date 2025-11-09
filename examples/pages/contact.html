@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .contact-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: white;
+            color: #4facfe;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .api-example {
+            margin-top: 20px;
+        }
+        
+        .api-example pre {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>📧 Contact & API</h1>
+        <p>This page demonstrates a form and shows how to use the SWH API.</p>
+        
+        <div class="card">
+            <h2>Contact Form</h2>
+            <form class="contact-form" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" required></textarea>
+                </div>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>SWH API Methods</h2>
+            <div class="api-example">
+                <pre>// Open a new tab
+swh.openTab('tab-id', 'Tab Title', 'page.html');
+
+// Switch to a tab
+swh.switchTab('tab-id');
+
+// Close a tab
+swh.closeTab('tab-id');
+
+// Get open tabs
+const tabs = swh.getOpenTabs();
+
+// Get active tab
+const activeId = swh.getActiveTab();
+
+// Reload a tab
+swh.reloadTab('tab-id');
+
+// Listen to events
+swh.on('tabOpened', (data) => {
+    console.log('Tab opened:', data);
+});</pre>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Loaded At</h3>
+            <p id="load-time"></p>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('load-time').textContent = new Date().toLocaleString();
+        
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            alert(`Message sent!\n\nName: ${name}\nEmail: ${email}\nMessage: ${message}`);
+            
+            // Reset form
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>

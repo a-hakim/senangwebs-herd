@@ -1,0 +1,181 @@
+/**
+ * SenangWebs Herd (SWH) - Default Styles
+ * @version 1.0.0
+ */
+
+/* Container Styles */
+[data-swh] {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+/* Tabs Container */
+[data-swh-tabs] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* Tab Button Styles */
+.swh-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #333;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    position: relative;
+    min-width: 80px;
+    max-width: 200px;
+}
+
+.swh-tab:hover {
+    background-color: #f9f9f9;
+    border-color: #999;
+}
+
+.swh-tab.active {
+    background-color: #fff;
+    border-bottom-color: #fff;
+    color: #0066cc;
+    font-weight: 500;
+    z-index: 1;
+}
+
+/* Tab Close Button */
+.swh-tab-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-left: 4px;
+    border-radius: 3px;
+    font-size: 18px;
+    line-height: 1;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.swh-tab-close:hover {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+/* Content Container */
+[data-swh-content] {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+/* Iframe Styles */
+.swh-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #fff;
+}
+
+.swh-iframe:not([src]) {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="%23999" stroke-width="3"><animate attributeName="stroke-dasharray" values="0 125;95 125;0 125" dur="1.5s" repeatCount="indefinite"/><animate attributeName="stroke-dashoffset" values="0;-31.25;-125" dur="1.5s" repeatCount="indefinite"/></circle></svg>') center center no-repeat;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .swh-tab {
+        min-width: 60px;
+        max-width: 150px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    [data-swh-tabs] {
+        padding: 6px;
+        gap: 2px;
+    }
+}
+
+/* Scrollbar Styles for Tabs Container */
+[data-swh-tabs]::-webkit-scrollbar {
+    height: 6px;
+}
+
+[data-swh-tabs]::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+[data-swh-tabs]::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+[data-swh-tabs]::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Loading State */
+.swh-iframe.loading {
+    opacity: 0.6;
+}
+
+/* Focus Styles for Accessibility */
+.swh-tab:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+.swh-tab:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+    [data-swh-tabs] {
+        background-color: #2d2d2d;
+        border-bottom-color: #444;
+    }
+    
+    .swh-tab {
+        background-color: #3d3d3d;
+        border-color: #555;
+        color: #e0e0e0;
+    }
+    
+    .swh-tab:hover {
+        background-color: #4d4d4d;
+        border-color: #666;
+    }
+    
+    .swh-tab.active {
+        background-color: #1e1e1e;
+        border-bottom-color: #1e1e1e;
+        color: #4da6ff;
+    }
+    
+    [data-swh-content] {
+        background-color: #1e1e1e;
+    }
+    
+    .swh-iframe {
+        background-color: #1e1e1e;
+    }
+}

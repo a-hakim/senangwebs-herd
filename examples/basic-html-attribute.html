@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWH - Basic HTML Attribute Example</title>
+    <link rel="stylesheet" href="../src/css/swh.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: #0066cc;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        #swh-container {
+            flex: 1;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SenangWebs Herd</h1>
+            <p>Basic HTML Attribute Initialization Example</p>
+        </header>
+        
+        <!-- SWH Container with HTML Attributes -->
+        <div id="swh-container" 
+             data-swh
+             data-swh-storage-key="basic-example-tabs"
+             data-swh-default-tab="home"
+             data-swh-allow-close
+             data-swh-max-tabs="10">
+            
+            <!-- Tabs Container -->
+            <div data-swh-tabs>
+                <button data-swh-tab="home">Home</button>
+                <button data-swh-tab="about">About</button>
+                <button data-swh-tab="contact">Contact</button>
+            </div>
+            
+            <!-- Content Container -->
+            <div data-swh-content>
+                <iframe data-swh-iframe="home" data-url="pages/home.html"></iframe>
+                <iframe data-swh-iframe="about" data-url="pages/about.html"></iframe>
+                <iframe data-swh-iframe="contact" data-url="pages/contact.html"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../src/js/swh.js"></script>
+</body>
+</html>

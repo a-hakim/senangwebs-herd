@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SenangWebs Herd - Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        
+        header h1 {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .example-card .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .example-card h2 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+        
+        .example-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .example-card .features {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .example-card .features li {
+            padding: 6px 0;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .example-card .features li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .docs-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .docs-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+        
+        .docs-section h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .docs-section pre {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .docs-section code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .docs-section p {
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 SenangWebs Herd</h1>
+            <p>Examples & Documentation</p>
+        </header>
+        
+        <div class="examples-grid">
+            <a href="basic-html-attribute.html" class="example-card">
+                <div class="icon">📄</div>
+                <h2>Basic HTML Attribute</h2>
+                <p>The simplest way to use SWH with data attributes.</p>
+                <ul class="features">
+                    <li>HTML-only initialization</li>
+                    <li>Preset tabs in markup</li>
+                    <li>State persistence</li>
+                    <li>Tab closing enabled</li>
+                </ul>
+            </a>
+            
+            <a href="javascript-init.html" class="example-card">
+                <div class="icon">⚙️</div>
+                <h2>JavaScript Initialization</h2>
+                <p>Programmatic setup with dynamic controls.</p>
+                <ul class="features">
+                    <li>JavaScript configuration</li>
+                    <li>Dynamic tab creation</li>
+                    <li>API method demos</li>
+                    <li>Runtime controls</li>
+                </ul>
+            </a>
+            
+            <a href="event-handling.html" class="example-card">
+                <div class="icon">📊</div>
+                <h2>Event Handling</h2>
+                <p>Advanced event system with real-time monitoring.</p>
+                <ul class="features">
+                    <li>Event monitoring</li>
+                    <li>Statistics dashboard</li>
+                    <li>Event log</li>
+                    <li>Visual feedback</li>
+                </ul>
+            </a>
+        </div>
+        
+        <div class="docs-section">
+            <h2>🚀 Quick Start</h2>
+            
+            <h3>Installation</h3>
+            <p>Include the CSS and JavaScript files in your HTML:</p>
+            <pre>&lt;link rel="stylesheet" href="path/to/swh.css"&gt;
+&lt;script src="path/to/swh.js"&gt;&lt;/script&gt;</pre>
+            
+            <h3>HTML Initialization</h3>
+            <pre>&lt;div data-swh
+     data-swh-storage-key="my-tabs"
+     data-swh-default-tab="home"
+     data-swh-allow-close&gt;
+    
+    &lt;div data-swh-tabs&gt;
+        &lt;button data-swh-tab="home"&gt;Home&lt;/button&gt;
+        &lt;button data-swh-tab="about"&gt;About&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div data-swh-content&gt;
+        &lt;iframe data-swh-iframe="home" data-url="home.html"&gt;&lt;/iframe&gt;
+        &lt;iframe data-swh-iframe="about" data-url="about.html"&gt;&lt;/iframe&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+            
+            <h3>JavaScript Initialization</h3>
+            <pre>const swh = new SWH({
+    container: document.querySelector('#swh-container'),
+    tabsContainer: document.querySelector('#swh-tabs'),
+    contentContainer: document.querySelector('#swh-content'),
+    presetTabs: [
+        { id: "home", title: "Home", url: "home.html" }
+    ],
+    storageKey: "my-tabs",
+    defaultTab: "home",
+    allowClose: true,
+    maxTabs: 5
+});</pre>
+            
+            <h3>API Methods</h3>
+            <pre>// Open a new tab
+swh.openTab('settings', 'Settings', 'settings.html');
+
+// Switch to a tab
+swh.switchTab('home');
+
+// Close a tab
+swh.closeTab('settings');
+
+// Get open tabs
+const tabs = swh.getOpenTabs();
+
+// Listen to events
+swh.on('tabOpened', (data) => {
+    console.log('Tab opened:', data);
+});</pre>
+            
+            <h3>Running Examples Locally</h3>
+            <p>To avoid CORS issues with iframes, run a local web server:</p>
+            <pre># Using Python
+python -m http.server 8000
+
+# Using PHP
+php -S localhost:8000
+
+# Using Node.js
+npx http-server -p 8000</pre>
+            <p>Then visit: <code>http://localhost:8000/examples/</code></p>
+        </div>
+        
+        <footer>
+            <p>SenangWebs Herd &copy; 2025 | MIT License</p>
+            <p>Perfect for dashboards, admin panels, and internal tools</p>
+        </footer>
+    </div>
+</body>
+</html>

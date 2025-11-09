@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .pros-cons h3 {
+            margin-bottom: 10px;
+        }
+        
+        .pros-cons ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .pros-cons li {
+            padding: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>📖 About SWH</h1>
+        <p>SenangWebs Herd (SWH) is a lightweight web library for managing multiple HTML files within a single page.</p>
+        
+        <div class="card">
+            <h2>What is SWH?</h2>
+            <p>SWH embeds external HTML files inside iframe elements and allows users to open, close, and switch between tabs. The open tabs and active tab state are persisted using localStorage, allowing the layout to remain consistent after page refresh.</p>
+        </div>
+        
+        <div class="card">
+            <h2>Pros & Cons</h2>
+            <div class="pros-cons">
+                <div>
+                    <h3>✅ Pros</h3>
+                    <ul>
+                        <li>Easy integration</li>
+                        <li>No SPA frameworks needed</li>
+                        <li>Smooth screen switching</li>
+                        <li>Maintains user context</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>⚠️ Considerations</h3>
+                    <ul>
+                        <li>Not for SEO pages</li>
+                        <li>Cross-origin restrictions</li>
+                        <li>Memory with many tabs</li>
+                        <li>Use postMessage for comms</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Loaded At</h3>
+            <p id="load-time"></p>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('load-time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

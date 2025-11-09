@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWH - JavaScript Initialization Example</title>
+    <link rel="stylesheet" href="../src/css/swh.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: #27ae60;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        #swh-container {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #swh-tabs {
+            flex-shrink: 1;
+        }
+
+        #swh-content {
+            position: relative;
+            flex-grow: 1;
+        }
+        
+        .controls {
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-bottom: 1px solid #bdc3c7;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .controls button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .controls button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SenangWebs Herd</h1>
+            <p>JavaScript Initialization Example with Dynamic Tab Control</p>
+        </header>
+        
+        <div class="controls">
+            <button onclick="addNewTab()">Add New Tab</button>
+            <button onclick="reloadActiveTab()">Reload Active Tab</button>
+            <button onclick="showOpenTabs()">Show Open Tabs</button>
+            <button onclick="clearAllTabs()">Clear All Tabs</button>
+        </div>
+        
+        <div id="swh-container">
+            <div id="swh-tabs"></div>
+            <div id="swh-content"></div>
+        </div>
+    </div>
+    
+    <script src="../src/js/swh.js"></script>
+    <script>
+        let swhInstance;
+        let tabCounter = 4;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize SWH via JavaScript
+            swhInstance = new SWH({
+                container: document.querySelector('#swh-container'),
+                tabsContainer: document.querySelector('#swh-tabs'),
+                contentContainer: document.querySelector('#swh-content'),
+                presetTabs: [
+                    { id: "home", title: "Home", url: "pages/home.html" },
+                    { id: "about", title: "About", url: "pages/about.html" },
+                    { id: "contact", title: "Contact", url: "pages/contact.html" }
+                ],
+                storageKey: "js-example-tabs",
+                defaultTab: "home",
+                allowClose: true,
+                maxTabs: 8
+            });
+            
+            // Register event listeners
+            swhInstance.on('tabOpened', (data) => {
+                console.log('Tab opened:', data);
+            });
+            
+            swhInstance.on('tabClosed', (data) => {
+                console.log('Tab closed:', data);
+            });
+            
+            swhInstance.on('tabSwitched', (data) => {
+                console.log('Tab switched:', data);
+            });
+            
+            swhInstance.on('tabLoaded', (data) => {
+                console.log('Tab loaded:', data);
+            });
+            
+            swhInstance.on('maxTabsReached', (data) => {
+                alert(`Maximum tabs limit reached: ${data.maxTabs}`);
+            });
+        });
+        
+        function addNewTab() {
+            if (!swhInstance) return;
+            
+            const id = `tab-${tabCounter}`;
+            const title = `Tab ${tabCounter}`;
+            const url = `pages/dynamic-${tabCounter % 3 === 0 ? 'home' : tabCounter % 3 === 1 ? 'about' : 'contact'}.html`;
+            
+            swhInstance.openTab(id, title, url);
+            tabCounter++;
+        }
+        
+        function reloadActiveTab() {
+            if (!swhInstance) return;
+            
+            const activeTabId = swhInstance.getActiveTab();
+            if (activeTabId) {
+                swhInstance.reloadTab(activeTabId);
+                alert(`Reloading tab: ${activeTabId}`);
+            } else {
+                alert('No active tab');
+            }
+        }
+        
+        function showOpenTabs() {
+            if (!swhInstance) return;
+            
+            const openTabs = swhInstance.getOpenTabs();
+            const activeTab = swhInstance.getActiveTab();
+            
+            const tabInfo = openTabs.map(tab => 
+                `${tab.id} (${tab.title}) ${tab.id === activeTab ? '← ACTIVE' : ''}`
+            ).join('\n');
+            
+            alert('Open Tabs:\n\n' + tabInfo);
+        }
+        
+        function clearAllTabs() {
+            if (!swhInstance) return;
+            
+            if (confirm('Are you sure you want to clear all tabs?')) {
+                swhInstance.clearTabs();
+            }
+        }
+    </script>
+</body>
+</html>

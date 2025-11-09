@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWH - Event Handling Demo</title>
+    <link rel="stylesheet" href="../src/css/swh.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .event-log {
+            background-color: #34495e;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        
+        .event-item {
+            padding: 8px;
+            margin-bottom: 8px;
+            background-color: #2c3e50;
+            border-radius: 3px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .event-item.opened {
+            border-left-color: #2ecc71;
+        }
+        
+        .event-item.closed {
+            border-left-color: #e74c3c;
+        }
+        
+        .event-item.switched {
+            border-left-color: #f39c12;
+        }
+        
+        .event-item .time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+        
+        .clear-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .clear-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: #9b59b6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        #swh-container {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .stats {
+            background-color: #34495e;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #2c3e50;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>📊 Event Monitor</h2>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Tabs Opened:</span>
+                    <span class="stat-value" id="stat-opened">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Tabs Closed:</span>
+                    <span class="stat-value" id="stat-closed">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Tab Switches:</span>
+                    <span class="stat-value" id="stat-switched">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Tabs Loaded:</span>
+                    <span class="stat-value" id="stat-loaded">0</span>
+                </div>
+            </div>
+            
+            <h2 style="margin-top: 20px;">📋 Event Log</h2>
+            <div class="event-log" id="event-log">
+                <p style="opacity: 0.5; text-align: center;">No events yet...</p>
+            </div>
+            <button class="clear-btn" onclick="clearLog()">Clear Log</button>
+        </div>
+        
+        <div class="main-content">
+            <header>
+                <h1>SenangWebs Herd</h1>
+                <p>Event Handling Demonstration</p>
+            </header>
+            
+            <div id="swh-container">
+                <div id="swh-tabs"></div>
+                <div id="swh-content"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../src/js/swh.js"></script>
+    <script>
+        let swhInstance;
+        let stats = {
+            opened: 0,
+            closed: 0,
+            switched: 0,
+            loaded: 0
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize SWH
+            swhInstance = new SWH({
+                container: document.querySelector('#swh-container'),
+                tabsContainer: document.querySelector('#swh-tabs'),
+                contentContainer: document.querySelector('#swh-content'),
+                presetTabs: [
+                    { id: "home", title: "Home", url: "pages/home.html" },
+                    { id: "about", title: "About", url: "pages/about.html" },
+                    { id: "contact", title: "Contact", url: "pages/contact.html" }
+                ],
+                storageKey: "event-demo-tabs",
+                defaultTab: "home",
+                allowClose: true,
+                maxTabs: 5
+            });
+            
+            // Register event listeners with logging
+            swhInstance.on('tabOpened', (data) => {
+                stats.opened++;
+                updateStats();
+                logEvent('opened', `Tab opened: ${data.title} (${data.id})`);
+            });
+            
+            swhInstance.on('tabClosed', (data) => {
+                stats.closed++;
+                updateStats();
+                logEvent('closed', `Tab closed: ${data.id}`);
+            });
+            
+            swhInstance.on('tabSwitched', (data) => {
+                stats.switched++;
+                updateStats();
+                logEvent('switched', `Switched to: ${data.tab.title} (${data.id})`);
+            });
+            
+            swhInstance.on('tabLoaded', (data) => {
+                stats.loaded++;
+                updateStats();
+                logEvent('loaded', `Tab loaded: ${data.id}`);
+            });
+            
+            swhInstance.on('maxTabsReached', (data) => {
+                logEvent('error', `Maximum tabs limit reached: ${data.maxTabs}`);
+            });
+        });
+        
+        function logEvent(type, message) {
+            const eventLog = document.getElementById('event-log');
+            const eventItem = document.createElement('div');
+            eventItem.className = `event-item ${type}`;
+            
+            const time = new Date().toLocaleTimeString();
+            eventItem.innerHTML = `
+                <div>${message}</div>
+                <div class="time">${time}</div>
+            `;
+            
+            // Remove placeholder if exists
+            if (eventLog.querySelector('p')) {
+                eventLog.innerHTML = '';
+            }
+            
+            eventLog.insertBefore(eventItem, eventLog.firstChild);
+            
+            // Keep only last 20 events
+            while (eventLog.children.length > 20) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        }
+        
+        function updateStats() {
+            document.getElementById('stat-opened').textContent = stats.opened;
+            document.getElementById('stat-closed').textContent = stats.closed;
+            document.getElementById('stat-switched').textContent = stats.switched;
+            document.getElementById('stat-loaded').textContent = stats.loaded;
+        }
+        
+        function clearLog() {
+            const eventLog = document.getElementById('event-log');
+            eventLog.innerHTML = '<p style="opacity: 0.5; text-align: center;">No events yet...</p>';
+        }
+    </script>
+</body>
+</html>
