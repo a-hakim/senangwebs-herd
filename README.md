@@ -17,8 +17,8 @@ A lightweight web library for managing multiple HTML files within a single page 
 ### Direct Include
 
 ```html
-<link rel="stylesheet" href="path/to/swh.css">
-<script src="path/to/swh.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.css">
+<script src="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.js"></script>
 ```
 
 ### Build from Source
@@ -42,6 +42,7 @@ npm run watch
 ### HTML Attribute Initialization
 
 ```html
+<link rel="stylesheet" href="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.css">
 <div data-swh
      data-swh-storage-key="my-app-tabs"
      data-swh-default-tab="home"
@@ -59,18 +60,20 @@ npm run watch
     </div>
 </div>
 
-<script src="path/to/swh.js"></script>
+<script src="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.js"></script>
 ```
 
 ### JavaScript Initialization
 
 ```html
+<link rel="stylesheet" href="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.css">
+
 <div id="my-swh">
     <div id="swh-tabs"></div>
     <div id="swh-content"></div>
 </div>
 
-<script src="path/to/swh.js"></script>
+<script src="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const swh = new SWH({
