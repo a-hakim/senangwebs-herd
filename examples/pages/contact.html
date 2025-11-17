@@ -4,125 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            padding: 40px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            margin: 0;
-            min-height: 100vh;
-        }
-        
-        .content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        
-        p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        
-        .card {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 30px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .contact-form {
-            margin-top: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-family: inherit;
-        }
-        
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        button {
-            background-color: white;
-            color: #4facfe;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-        }
-        
-        .api-example {
-            margin-top: 20px;
-        }
-        
-        .api-example pre {
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-size: 14px;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="content">
-        <h1>📧 Contact & API</h1>
-        <p>This page demonstrates a form and shows how to use the SWH API.</p>
+<body class="font-sans antialiased p-10 min-h-screen bg-slate-50 text-slate-900">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-5xl font-extrabold uppercase tracking-wide mb-5">Contact & API</h1>
+        <p class="text-lg leading-relaxed">This page demonstrates a form and shows how to use the SWH API.</p>
         
-        <div class="card">
-            <h2>Contact Form</h2>
-            <form class="contact-form" onsubmit="handleSubmit(event)">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" required>
+        <div class="bg-white border-4 border-slate-900 rounded-sm p-6 mt-8 shadow-[8px_8px_0_rgba(0,0,0,0.08)]">
+            <h2 class="text-2xl font-semibold mb-4">Contact Form</h2>
+            <form class="space-y-4" onsubmit="handleSubmit(event)">
+                <div>
+                    <label for="name" class="block mb-2 font-medium">Name</label>
+                    <input type="text" id="name" required class="w-full p-3 border-2 border-slate-900 rounded-sm text-slate-900 bg-white" />
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
+                <div>
+                    <label for="email" class="block mb-2 font-medium">Email</label>
+                    <input type="email" id="email" required class="w-full p-3 border-2 border-slate-900 rounded-sm text-slate-900 bg-white" />
                 </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" required></textarea>
+                <div>
+                    <label for="message" class="block mb-2 font-medium">Message</label>
+                    <textarea id="message" required class="w-full p-3 border-2 border-slate-900 rounded-sm text-slate-900 bg-white min-h-[120px]"></textarea>
                 </div>
-                <button type="submit">Send Message</button>
+                <button type="submit" class="bg-white border-2 border-slate-900 text-slate-900 font-semibold px-5 py-2 rounded-sm hover:-translate-y-1 transition">Send Message</button>
             </form>
         </div>
         
-        <div class="card">
-            <h2>SWH API Methods</h2>
-            <div class="api-example">
-                <pre>// Open a new tab
+        <div class="bg-white border-4 border-slate-900 rounded-sm p-6 mt-8 shadow-[8px_8px_0_rgba(0,0,0,0.08)]">
+            <h2 class="text-2xl font-semibold mb-3">SWH API Methods</h2>
+            <div class="mt-4 bg-slate-900 border-4 border-slate-900 p-4 rounded-sm shadow-[6px_6px_0_rgba(0,0,0,0.08)] overflow-x-auto text-sm">
+                <pre class="whitespace-pre-wrap font-mono text-white">// Open a new tab
 swh.openTab('tab-id', 'Tab Title', 'page.html');
 
 // Switch to a tab
@@ -147,8 +58,8 @@ swh.on('tabOpened', (data) => {
             </div>
         </div>
         
-        <div class="card">
-            <h3>Loaded At</h3>
+        <div class="bg-white border-4 border-slate-900 rounded-sm p-6 mt-6 shadow-[8px_8px_0_rgba(0,0,0,0.08)]">
+            <h3 class="text-xl font-medium mb-2">Loaded At</h3>
             <p id="load-time"></p>
         </div>
     </div>

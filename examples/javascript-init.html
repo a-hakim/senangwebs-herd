@@ -7,13 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../src/css/swh.css">
 </head>
-<body class="h-screen flex flex-col">
-    <header class="bg-green-600 text-white py-5 px-5 text-center">
-        <h1 class="text-2xl font-bold mb-2">SenangWebs Herd</h1>
-        <p class="text-sm opacity-90">JavaScript Initialization Example with Dynamic Tab Control</p>
-    </header>
-    
-    <div class="p-2.5 bg-gray-100 border-b border-gray-300 flex flex-wrap gap-2.5">
+<body class="h-screen flex flex-col">  
+    <div class="p-2.5 bg-neutral-200 flex flex-wrap gap-2.5">
         <button onclick="addNewTab()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
             Add New Tab
         </button>
@@ -29,7 +24,7 @@
     </div>
     
     <div id="swh-container" class="flex-1 overflow-hidden flex flex-col">
-        <div id="swh-tabs"></div>
+        <div id="swh-tabs" class="bg-[#007370]"></div>
         <div id="swh-content" class="relative flex-1"></div>
     </div>
     
@@ -79,11 +74,12 @@
         
         function addNewTab() {
             if (!swhInstance) return;
-            
+
             const id = `tab-${tabCounter}`;
             const title = `Tab ${tabCounter}`;
-            const url = `pages/dynamic-${tabCounter % 3 === 0 ? 'home' : tabCounter % 3 === 1 ? 'about' : 'contact'}.html`;
-            
+            const defaultUrl = "https://senangwebs.com/";
+            const url = prompt("Enter the URL for the new tab:", defaultUrl) || defaultUrl;
+
             swhInstance.openTab(id, title, url);
             tabCounter++;
         }
