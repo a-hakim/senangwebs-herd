@@ -2,6 +2,8 @@
 
 A lightweight web library for managing multiple HTML files within a single page using tabs and lazy-loaded iframes.
 
+![SenangWebs Herd Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-herd/master/swh_preview.png)
+
 ## Features
 
 - **Tabbed multi-page interface** - Manage multiple HTML screens in one window  
