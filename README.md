@@ -4,11 +4,11 @@ A lightweight web library for managing multiple HTML files within a single page 
 
 ## Features
 
-✅ **Tabbed multi-page interface** - Manage multiple HTML screens in one window  
-✅ **Lazy-loaded iframes** - Iframe loads only when first activated  
-✅ **State persistence** - Open tabs and active tab preserved after refresh  
-✅ **Dynamic tab management** - Open and close tabs during runtime  
-✅ **Cross-origin communication support** - Use `window.postMessage` for secure data exchange  
+**Tabbed multi-page interface** - Manage multiple HTML screens in one window  
+**Lazy-loaded iframes** - Iframe loads only when first activated  
+**State persistence** - Open tabs and active tab preserved after refresh  
+**Dynamic tab management** - Open and close tabs during runtime  
+**Cross-origin communication support** - Use `window.postMessage` for secure data exchange  
 
 ## Installation
 
@@ -139,14 +139,14 @@ Check the `examples/` directory for working demonstrations:
 
 ## Use Cases
 
-✅ Dashboards  
-✅ Admin panels  
-✅ Internal tools  
-✅ Modular web applications  
+Dashboards  
+Admin panels  
+Internal tools  
+Modular web applications  
 
-❌ SEO landing pages  
-❌ Content websites  
-❌ Public-facing marketing sites  
+SEO landing pages  
+Content websites  
+Public-facing marketing sites  
 
 ## Browser Compatibility
 
