@@ -10,6 +10,7 @@ A lightweight web library for managing multiple HTML files within a single page 
 - **Lazy-loaded iframes** - Iframe loads only when first activated  
 - **State persistence** - Open tabs and active tab preserved after refresh  
 - **Dynamic tab management** - Open and close tabs during runtime  
+- **Accessible keyboard navigation** - Navigate tabs with arrow, Home, End, and Delete keys
 - **Cross-origin communication support** - Use `window.postMessage` for secure data exchange  
 
 ## Installation
@@ -20,6 +21,9 @@ A lightweight web library for managing multiple HTML files within a single page 
 <link rel="stylesheet" href="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.css">
 <script src="https://unpkg.com/senangwebs-herd@latest/dist/swh.min.js"></script>
 ```
+
+The script exposes the constructor as `window.SWH`. The UMD bundle also
+supports CommonJS and AMD loaders.
 
 ### Build from Source
 
@@ -120,6 +124,19 @@ document.addEventListener("DOMContentLoaded", function() {
 | `tabSwitched` | Fired when the active tab changes |
 | `tabLoaded` | Fired when an iframe finishes loading |
 | `maxTabsReached` | Fired when trying to exceed maxTabs limit |
+
+### Keyboard Controls
+
+When focus is on a tab:
+
+| Key | Action |
+|-----|--------|
+| `ArrowLeft` / `ArrowRight` | Activate and focus the previous or next tab |
+| `Home` / `End` | Activate and focus the first or last tab |
+| `Delete` | Close the focused tab when `allowClose` is enabled |
+
+SWH automatically applies `tablist`, `tab`, and `tabpanel` roles with the
+corresponding ARIA state and relationships.
 
 ### Configuration Options
 

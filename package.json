@@ -1,6 +1,6 @@
 {
   "name": "senangwebs-herd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight web library for managing multiple HTML files within a single page using tabs and lazy-loaded iframes",
   "main": "dist/swh.min.js",
   "style": "dist/swh.min.css",

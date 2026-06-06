@@ -8,6 +8,7 @@ This directory contains example implementations of SenangWebs Herd (SWH).
 **File:** `basic-html-attribute.html`
 
 Demonstrates the simplest way to use SWH by adding data attributes to your HTML elements. The library automatically detects and initializes the tab system.
+The example loads the browser-ready files from `dist/`.
 
 **Features:**
 - HTML-only initialization

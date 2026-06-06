@@ -9,10 +9,71 @@
 		root["SWH"] = factory();
 })(this, () => {
 return /******/ (() => { // webpackBootstrap
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/css/swh.css"
+/*!*************************!*\
+  !*** ./src/css/swh.css ***!
+  \*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -26,11 +87,16 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be isolated against other entry modules.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!***********************!*\
   !*** ./src/js/swh.js ***!
   \***********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _css_swh_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../css/swh.css */ "./src/css/swh.css");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -40,14 +106,18 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
 /**
  * SenangWebs Herd (SWH)
  * A lightweight library for managing multiple HTML files within a single page using tabs and lazy-loaded iframes.
  * @version 1.0.0
  */
 
-(function (window) {
+var SWH = function (window) {
   'use strict';
+
+  var instanceCounter = 0;
 
   /**
    * SWH Constructor
@@ -87,6 +157,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         allowClose: config.allowClose || false,
         maxTabs: config.maxTabs || Infinity
       };
+      this.instanceId = ++instanceCounter;
+      this.tabCounter = 0;
 
       // Initialize internal state
       this.state = {
@@ -101,6 +173,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
       // Initialize event system
       this.events = new Map();
+
+      // Add accessible semantics to the tab collection
+      this.config.tabsContainer.setAttribute('role', 'tablist');
 
       // Initialize the instance
       this.init();
@@ -165,12 +240,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           });
           return false;
         }
+        var elementId = "swh-".concat(this.instanceId, "-").concat(++this.tabCounter);
 
         // Create tab button
-        var tabButton = this.createTabButton(id, title);
+        var tabButton = this.createTabButton(id, title, elementId);
 
         // Create iframe
-        var iframe = this.createIframe(id, url);
+        var iframe = this.createIframe(id, url, elementId);
 
         // Add to state
         this.state.openTabs.push({
@@ -202,15 +278,21 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
        * Create a tab button element
        * @param {string} id - Tab ID
        * @param {string} title - Tab title
+       * @param {string} elementId - Unique DOM ID shared with the tab panel
        * @returns {HTMLElement} Tab button element
        */
     }, {
       key: "createTabButton",
-      value: function createTabButton(id, title) {
+      value: function createTabButton(id, title, elementId) {
         var _this2 = this;
         var button = document.createElement('button');
         button.className = 'swh-tab';
+        button.id = "".concat(elementId, "-tab");
+        button.setAttribute('role', 'tab');
         button.setAttribute('data-swh-tab', id);
+        button.setAttribute('aria-controls', "".concat(elementId, "-panel"));
+        button.setAttribute('aria-selected', 'false');
+        button.setAttribute('tabindex', '-1');
         button.textContent = title;
 
         // Add click handler to switch tabs
@@ -218,12 +300,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           e.preventDefault();
           _this2.switchTab(id);
         });
+        button.addEventListener('keydown', function (e) {
+          _this2.handleTabKeydown(e, id);
+        });
 
         // Add close button if allowed
         if (this.config.allowClose) {
           var closeBtn = document.createElement('span');
           closeBtn.className = 'swh-tab-close';
-          closeBtn.innerHTML = '&times;';
+          closeBtn.setAttribute('aria-hidden', 'true');
+          closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>';
           closeBtn.setAttribute('title', 'Close tab');
           closeBtn.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -238,16 +324,20 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
        * Create an iframe element
        * @param {string} id - Tab ID
        * @param {string} url - URL to load
+       * @param {string} elementId - Unique DOM ID shared with the tab
        * @returns {HTMLElement} Iframe element
        */
     }, {
       key: "createIframe",
-      value: function createIframe(id, url) {
+      value: function createIframe(id, url, elementId) {
         var _this3 = this;
         var iframe = document.createElement('iframe');
         iframe.className = 'swh-iframe';
+        iframe.id = "".concat(elementId, "-panel");
+        iframe.setAttribute('role', 'tabpanel');
         iframe.setAttribute('data-swh-iframe', id);
         iframe.setAttribute('data-url', url);
+        iframe.setAttribute('aria-labelledby', "".concat(elementId, "-tab"));
         iframe.style.display = 'none';
 
         // Add load event handler
@@ -267,6 +357,48 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           }
         });
         return iframe;
+      }
+
+      /**
+       * Handle keyboard navigation within the tab list
+       * @param {KeyboardEvent} event - Keyboard event
+       * @param {string} id - Current tab ID
+       */
+    }, {
+      key: "handleTabKeydown",
+      value: function handleTabKeydown(event, id) {
+        var currentIndex = this.state.openTabs.findIndex(function (tab) {
+          return tab.id === id;
+        });
+        if (currentIndex === -1) {
+          return;
+        }
+        var targetIndex = null;
+        if (event.key === 'ArrowLeft') {
+          targetIndex = (currentIndex - 1 + this.state.openTabs.length) % this.state.openTabs.length;
+        } else if (event.key === 'ArrowRight') {
+          targetIndex = (currentIndex + 1) % this.state.openTabs.length;
+        } else if (event.key === 'Home') {
+          targetIndex = 0;
+        } else if (event.key === 'End') {
+          targetIndex = this.state.openTabs.length - 1;
+        } else if (event.key === 'Delete' && this.config.allowClose) {
+          event.preventDefault();
+          if (this.closeTab(id)) {
+            var activeTab = this.state.tabElements.get(this.state.activeTabId);
+            if (activeTab) {
+              activeTab.focus();
+            }
+          }
+          return;
+        } else {
+          return;
+        }
+        event.preventDefault();
+        var targetTab = this.state.openTabs[targetIndex];
+        if (targetTab && this.switchTab(targetTab.id)) {
+          this.state.tabElements.get(targetTab.id).focus();
+        }
       }
 
       /**
@@ -297,6 +429,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           var currentIframeElement = this.state.iframeElements.get(this.state.activeTabId);
           if (currentTabElement) {
             currentTabElement.classList.remove('active');
+            currentTabElement.setAttribute('aria-selected', 'false');
+            currentTabElement.setAttribute('tabindex', '-1');
           }
           if (currentIframeElement) {
             currentIframeElement.style.display = 'none';
@@ -305,6 +439,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
         // Activate target tab
         tabElement.classList.add('active');
+        tabElement.setAttribute('aria-selected', 'true');
+        tabElement.setAttribute('tabindex', '0');
         iframeElement.style.display = 'block';
 
         // Lazy load: set src only on first activation
@@ -620,18 +756,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
   // Export SWH to global scope
   window.SWH = SWH;
-})(window);
-})();
-
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-"use strict";
-/*!*************************!*\
-  !*** ./src/css/swh.css ***!
-  \*************************/
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
+  return SWH;
+}(window);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SWH);
 })();
 
 __webpack_exports__ = __webpack_exports__["default"];

@@ -1,11 +1,15 @@
+import '../css/swh.css';
+
 /**
  * SenangWebs Herd (SWH)
  * A lightweight library for managing multiple HTML files within a single page using tabs and lazy-loaded iframes.
  * @version 1.0.0
  */
 
-(function(window) {
+const SWH = (function(window) {
     'use strict';
+
+    let instanceCounter = 0;
 
     /**
      * SWH Constructor
@@ -44,6 +48,9 @@
                 maxTabs: config.maxTabs || Infinity
             };
 
+            this.instanceId = ++instanceCounter;
+            this.tabCounter = 0;
+
             // Initialize internal state
             this.state = {
                 openTabs: [],        // Array of {id, title, url, loaded}
@@ -54,6 +61,9 @@
 
             // Initialize event system
             this.events = new Map();
+
+            // Add accessible semantics to the tab collection
+            this.config.tabsContainer.setAttribute('role', 'tablist');
 
             // Initialize the instance
             this.init();
@@ -110,11 +120,13 @@
                 return false;
             }
 
+            const elementId = `swh-${this.instanceId}-${++this.tabCounter}`;
+
             // Create tab button
-            const tabButton = this.createTabButton(id, title);
+            const tabButton = this.createTabButton(id, title, elementId);
             
             // Create iframe
-            const iframe = this.createIframe(id, url);
+            const iframe = this.createIframe(id, url, elementId);
 
             // Add to state
             this.state.openTabs.push({
@@ -143,12 +155,18 @@
          * Create a tab button element
          * @param {string} id - Tab ID
          * @param {string} title - Tab title
+         * @param {string} elementId - Unique DOM ID shared with the tab panel
          * @returns {HTMLElement} Tab button element
          */
-        createTabButton(id, title) {
+        createTabButton(id, title, elementId) {
             const button = document.createElement('button');
             button.className = 'swh-tab';
+            button.id = `${elementId}-tab`;
+            button.setAttribute('role', 'tab');
             button.setAttribute('data-swh-tab', id);
+            button.setAttribute('aria-controls', `${elementId}-panel`);
+            button.setAttribute('aria-selected', 'false');
+            button.setAttribute('tabindex', '-1');
             button.textContent = title;
 
             // Add click handler to switch tabs
@@ -157,10 +175,15 @@
                 this.switchTab(id);
             });
 
+            button.addEventListener('keydown', (e) => {
+                this.handleTabKeydown(e, id);
+            });
+
             // Add close button if allowed
             if (this.config.allowClose) {
                 const closeBtn = document.createElement('span');
                 closeBtn.className = 'swh-tab-close';
+                closeBtn.setAttribute('aria-hidden', 'true');
                 closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>';
                 closeBtn.setAttribute('title', 'Close tab');
                 
@@ -179,13 +202,17 @@
          * Create an iframe element
          * @param {string} id - Tab ID
          * @param {string} url - URL to load
+         * @param {string} elementId - Unique DOM ID shared with the tab
          * @returns {HTMLElement} Iframe element
          */
-        createIframe(id, url) {
+        createIframe(id, url, elementId) {
             const iframe = document.createElement('iframe');
             iframe.className = 'swh-iframe';
+            iframe.id = `${elementId}-panel`;
+            iframe.setAttribute('role', 'tabpanel');
             iframe.setAttribute('data-swh-iframe', id);
             iframe.setAttribute('data-url', url);
+            iframe.setAttribute('aria-labelledby', `${elementId}-tab`);
             iframe.style.display = 'none';
 
             // Add load event handler
@@ -202,6 +229,47 @@
             });
 
             return iframe;
+        }
+
+        /**
+         * Handle keyboard navigation within the tab list
+         * @param {KeyboardEvent} event - Keyboard event
+         * @param {string} id - Current tab ID
+         */
+        handleTabKeydown(event, id) {
+            const currentIndex = this.state.openTabs.findIndex(tab => tab.id === id);
+            if (currentIndex === -1) {
+                return;
+            }
+
+            let targetIndex = null;
+
+            if (event.key === 'ArrowLeft') {
+                targetIndex = (currentIndex - 1 + this.state.openTabs.length) % this.state.openTabs.length;
+            } else if (event.key === 'ArrowRight') {
+                targetIndex = (currentIndex + 1) % this.state.openTabs.length;
+            } else if (event.key === 'Home') {
+                targetIndex = 0;
+            } else if (event.key === 'End') {
+                targetIndex = this.state.openTabs.length - 1;
+            } else if (event.key === 'Delete' && this.config.allowClose) {
+                event.preventDefault();
+                if (this.closeTab(id)) {
+                    const activeTab = this.state.tabElements.get(this.state.activeTabId);
+                    if (activeTab) {
+                        activeTab.focus();
+                    }
+                }
+                return;
+            } else {
+                return;
+            }
+
+            event.preventDefault();
+            const targetTab = this.state.openTabs[targetIndex];
+            if (targetTab && this.switchTab(targetTab.id)) {
+                this.state.tabElements.get(targetTab.id).focus();
+            }
         }
 
         /**
@@ -231,6 +299,8 @@
                 
                 if (currentTabElement) {
                     currentTabElement.classList.remove('active');
+                    currentTabElement.setAttribute('aria-selected', 'false');
+                    currentTabElement.setAttribute('tabindex', '-1');
                 }
                 if (currentIframeElement) {
                     currentIframeElement.style.display = 'none';
@@ -239,6 +309,8 @@
 
             // Activate target tab
             tabElement.classList.add('active');
+            tabElement.setAttribute('aria-selected', 'true');
+            tabElement.setAttribute('tabindex', '0');
             iframeElement.style.display = 'block';
 
             // Lazy load: set src only on first activation
@@ -532,4 +604,7 @@
     // Export SWH to global scope
     window.SWH = SWH;
 
+    return SWH;
 })(window);
+
+export default SWH;

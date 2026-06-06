@@ -7,7 +7,7 @@ module.exports = (env, argv) => {
 
   return {
     entry: {
-      swh: ['./src/js/swh.js', './src/css/swh.css'],
+      swh: './src/js/swh.js',
     },
     output: {
       filename: isDevelopment ? '[name].js' : '[name].min.js',
