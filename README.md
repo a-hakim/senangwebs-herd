@@ -2,6 +2,8 @@
 
 A lightweight web library for managing multiple HTML files within a single page using tabs and lazy-loaded iframes.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+
 ![SenangWebs Herd Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-herd/master/swh_preview.png)
 
 ## Features
