@@ -13,7 +13,8 @@ A lightweight web library for managing multiple HTML files within a single page 
 - **State persistence** - Open tabs and active tab preserved after refresh  
 - **Dynamic tab management** - Open and close tabs during runtime  
 - **Accessible keyboard navigation** - Navigate tabs with arrow, Home, End, and Delete keys
-- **Cross-origin communication support** - Use `window.postMessage` for secure data exchange  
+- **Optional iframe sandboxing** - Restrict embedded pages with the `sandbox` option
+- **Cross-origin friendly** - Iframes can host cross-origin pages; exchange data with `window.postMessage` from your own code  
 
 ## Installation
 
@@ -106,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function() {
 | Method | Description |
 |--------|-------------|
 | `openTab(id, title, url)` | Opens a new tab with the specified ID, title, and URL |
-| `closeTab(id)` | Closes the tab with the specified ID |
+| `closeTab(id)` | Closes the tab with the specified ID (the last remaining tab cannot be closed) |
 | `switchTab(id)` | Switches to the tab with the specified ID |
 | `getOpenTabs()` | Returns an array of currently open tabs |
 | `getActiveTab()` | Returns the currently active tab ID |
@@ -114,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function() {
 | `reloadTab(id)` | Reloads the iframe content of the specified tab |
 | `persistState()` | Saves the current tab state to localStorage |
 | `restoreState()` | Restores tab state from localStorage |
+| `destroy()` | Removes the UI, clears state and listeners, and detaches the instance (localStorage is left untouched) |
 | `on(event, callback)` | Registers an event listener |
 | `off(event, callback)` | Unregisters an event listener |
 
@@ -152,6 +154,17 @@ corresponding ARIA state and relationships.
 | `defaultTab` | string | `null` | Tab to activate if no previous state exists |
 | `allowClose` | boolean | `false` | Enable UI to close tabs |
 | `maxTabs` | number | `Infinity` | Maximum open tabs at once |
+| `sandbox` | boolean \| string | `false` | Iframe sandboxing: `true` applies all sandbox restrictions, a string sets specific tokens (e.g. `"allow-scripts"`), `false` disables |
+| `tabsLabel` | string | `"Tabs"` | Accessible `aria-label` for the tab list (only applied when the tab list has no label) |
+
+Note: when multiple `[data-swh]` containers exist without an explicit
+`data-swh-storage-key`, SWH derives distinct keys (`swh-tabs`, `swh-tabs-2`, ...)
+so their states never collide. Instances created via JavaScript that share a
+`storageKey` will log a warning.
+
+The HTML attribute initialization additionally supports `data-swh-sandbox`
+(with no value for full sandboxing, or a value with sandbox tokens) and
+`data-swh-tabs-label` for the tab list's accessible label.
 
 ## Examples
 
@@ -159,7 +172,6 @@ Check the `examples/` directory for working demonstrations:
 
 - **basic-html-attribute.html** - Simple HTML-based initialization
 - **javascript-init.html** - Programmatic initialization with dynamic controls
-- **event-handling.html** - Event system demonstration with monitoring
 
 ## Use Cases
 

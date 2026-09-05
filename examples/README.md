@@ -27,17 +27,6 @@ Shows how to initialize SWH programmatically using JavaScript, giving you more c
 - API method demonstrations (add, reload, show info)
 - Event listener registration
 
-### 3. Event Handling Demo
-**File:** `event-handling.html`
-
-An advanced example that demonstrates the event system with a real-time event monitor and statistics dashboard.
-
-**Features:**
-- Event monitoring sidebar
-- Real-time statistics
-- Event log with timestamps
-- Visual feedback for different event types
-
 ## Running the Examples
 
 ### Option 1: Local Web Server (Recommended)
@@ -76,7 +65,6 @@ You can also open the HTML files directly in your browser, but some browsers may
 examples/
 ├── basic-html-attribute.html    # HTML-based initialization
 ├── javascript-init.html          # JavaScript-based initialization
-├── event-handling.html           # Event system demonstration
 ├── pages/                        # Sample iframe content
 │   ├── home.html
 │   ├── about.html
@@ -123,4 +111,4 @@ Feel free to modify these examples to suit your needs:
 
 ## Need Help?
 
-Refer to the main `spec.md` file in the root directory for complete API documentation and configuration options.
+Refer to the main `README.md` file in the root directory for complete API documentation and configuration options.

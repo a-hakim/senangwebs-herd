@@ -1,7 +1,7 @@
 ---
 name: senangwebs-herd
 description: Single-page tabbed interface managing multiple HTML files via lazy-loaded iframes with state persistence.
-version: 1.0.1
+version: 1.1.0
 package: senangwebs-herd
 ---
 
@@ -29,7 +29,9 @@ const herd = new SWH({
   storageKey: 'swh-state',
   defaultTab: 'tab-id',
   allowClose: true,
-  maxTabs: 10
+  maxTabs: 10,
+  sandbox: false,       // true = full sandbox, string = sandbox tokens
+  tabsLabel: 'Tabs'
 })
 ```
 
@@ -44,7 +46,20 @@ herd.clearTabs()
 herd.reloadTab(id)
 herd.persistState()
 herd.restoreState()
+herd.destroy()
+herd.on(event, callback)
+herd.off(event, callback)
 ```
+
+### Behavior Notes
+
+- `closeTab` refuses to close the last remaining tab; `clearTabs` closes all tabs (including the last) and removes the stored state.
+- `restoreState` falls back to `defaultTab`, then the first open tab, when the stored active tab no longer exists.
+- Multiple instances sharing the same `storageKey` warn about state collisions; HTML containers without `data-swh-storage-key` get derived keys (`swh-tabs`, `swh-tabs-2`, ...).
+- State persistence is debounced (~150 ms) and flushed on `pagehide`, so a reload never loses the latest state.
+- `sandbox` applies the iframe `sandbox` attribute (`true` = all restrictions, string = tokens); `data-swh-sandbox` is the HTML-attribute equivalent.
+- The tab list gets `aria-label` from `tabsLabel` (default `"Tabs"`) only when no label exists; `destroy()` removes it again.
+- The `.loading` class is applied to iframes while content loads and removed on the `load` event.
 
 ### Events
 `tabOpened`, `tabClosed`, `tabSwitched`, `tabLoaded`, `maxTabsReached`
@@ -60,7 +75,7 @@ herd.restoreState()
 
 - Tab lifecycle: create → render iframe (lazy) → activate → close → destroy iframe
 - Lazy loading: iframe `src` set only on first activation, cached thereafter
-- localStorage state: open tabs, active tab, scroll position
+- localStorage state: open tabs and active tab
 - Cross-origin postMessage communication patterns
 - Tab limits: `maxTabs` enforcement, event when limit reached
 - Iframe sizing and responsive behavior

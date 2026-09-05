@@ -111,13 +111,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 /**
  * SenangWebs Herd (SWH)
  * A lightweight library for managing multiple HTML files within a single page using tabs and lazy-loaded iframes.
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 var SWH = function (window) {
   'use strict';
 
   var instanceCounter = 0;
+
+  // Tracks storage keys already claimed by instances so collisions can be warned about
+  var storageKeyRegistry = new Set();
 
   /**
    * SWH Constructor
@@ -130,9 +133,12 @@ var SWH = function (window) {
    * @param {string} config.defaultTab - Tab to activate if no previous state exists
    * @param {boolean} config.allowClose - Enable UI to close tabs
    * @param {number} config.maxTabs - Maximum open tabs at once
+   * @param {boolean|string} config.sandbox - Iframe sandbox: true applies all restrictions, a string sets specific sandbox tokens, false disables
+   * @param {string} config.tabsLabel - Accessible label for the tab list (aria-label, only applied when none present)
    */
   var SWH = /*#__PURE__*/function () {
     function SWH() {
+      var _this = this;
       var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       _classCallCheck(this, SWH);
       // Validate required elements
@@ -155,8 +161,18 @@ var SWH = function (window) {
         storageKey: config.storageKey || 'swh-tabs',
         defaultTab: config.defaultTab || null,
         allowClose: config.allowClose || false,
-        maxTabs: config.maxTabs || Infinity
+        maxTabs: typeof config.maxTabs === 'number' && config.maxTabs >= 0 ? config.maxTabs : Infinity,
+        sandbox: config.sandbox === true || typeof config.sandbox === 'string' && config.sandbox.trim() ? config.sandbox : false,
+        tabsLabel: typeof config.tabsLabel === 'string' && config.tabsLabel.trim() ? config.tabsLabel.trim() : 'Tabs'
       };
+
+      // Warn when another instance already uses the same storage key,
+      // as both instances will read/write each other's tab state
+      if (storageKeyRegistry.has(this.config.storageKey)) {
+        console.warn("SWH: storageKey \"".concat(this.config.storageKey, "\" is already in use by another instance; their states may overwrite each other"));
+      } else {
+        storageKeyRegistry.add(this.config.storageKey);
+      }
       this.instanceId = ++instanceCounter;
       this.tabCounter = 0;
 
@@ -177,6 +193,21 @@ var SWH = function (window) {
       // Add accessible semantics to the tab collection
       this.config.tabsContainer.setAttribute('role', 'tablist');
 
+      // Apply an accessible label to the tab list only when none exists
+      this._ownsAriaLabel = !this.config.tabsContainer.getAttribute('aria-label');
+      if (this._ownsAriaLabel) {
+        this.config.tabsContainer.setAttribute('aria-label', this.config.tabsLabel);
+      }
+
+      // Debounced state persistence; flushed on pagehide so a quick
+      // reload never loses the latest tab state
+      this._persistTimer = null;
+      this._handlePageHide = function () {
+        _this.cancelScheduledPersist();
+        _this.persistState();
+      };
+      window.addEventListener('pagehide', this._handlePageHide);
+
       // Initialize the instance
       this.init();
     }
@@ -187,14 +218,14 @@ var SWH = function (window) {
     return _createClass(SWH, [{
       key: "init",
       value: function init() {
-        var _this = this;
+        var _this2 = this;
         // Try to restore state from localStorage
         var restored = this.restoreState();
 
         // If no state was restored, create preset tabs
         if (!restored && this.config.presetTabs.length > 0) {
           this.config.presetTabs.forEach(function (tab) {
-            _this.openTab(tab.id, tab.title, tab.url);
+            _this2.openTab(tab.id, tab.title, tab.url);
           });
 
           // Activate default tab if specified
@@ -240,19 +271,24 @@ var SWH = function (window) {
           });
           return false;
         }
+
+        // Coerce title/url defensively so malformed input (e.g. from
+        // corrupted localStorage) can never render as "undefined"
+        var tabTitle = typeof title === 'string' && title.trim() ? title.trim() : id;
+        var tabUrl = typeof url === 'string' ? url : '';
         var elementId = "swh-".concat(this.instanceId, "-").concat(++this.tabCounter);
 
         // Create tab button
-        var tabButton = this.createTabButton(id, title, elementId);
+        var tabButton = this.createTabButton(id, tabTitle, elementId);
 
         // Create iframe
-        var iframe = this.createIframe(id, url, elementId);
+        var iframe = this.createIframe(id, tabUrl, elementId);
 
         // Add to state
         this.state.openTabs.push({
           id: id,
-          title: title,
-          url: url,
+          title: tabTitle,
+          url: tabUrl,
           loaded: false
         });
         this.state.tabElements.set(id, tabButton);
@@ -262,14 +298,14 @@ var SWH = function (window) {
         this.config.tabsContainer.appendChild(tabButton);
         this.config.contentContainer.appendChild(iframe);
 
-        // Persist state
-        this.persistState();
+        // Schedule state persistence
+        this.schedulePersist();
 
         // Emit event
         this.emit('tabOpened', {
           id: id,
-          title: title,
-          url: url
+          title: tabTitle,
+          url: tabUrl
         });
         return true;
       }
@@ -284,7 +320,7 @@ var SWH = function (window) {
     }, {
       key: "createTabButton",
       value: function createTabButton(id, title, elementId) {
-        var _this2 = this;
+        var _this3 = this;
         var button = document.createElement('button');
         button.className = 'swh-tab';
         button.id = "".concat(elementId, "-tab");
@@ -298,10 +334,10 @@ var SWH = function (window) {
         // Add click handler to switch tabs
         button.addEventListener('click', function (e) {
           e.preventDefault();
-          _this2.switchTab(id);
+          _this3.switchTab(id);
         });
         button.addEventListener('keydown', function (e) {
-          _this2.handleTabKeydown(e, id);
+          _this3.handleTabKeydown(e, id);
         });
 
         // Add close button if allowed
@@ -313,7 +349,7 @@ var SWH = function (window) {
           closeBtn.setAttribute('title', 'Close tab');
           closeBtn.addEventListener('click', function (e) {
             e.stopPropagation();
-            _this2.closeTab(id);
+            _this3.closeTab(id);
           });
           button.appendChild(closeBtn);
         }
@@ -330,7 +366,7 @@ var SWH = function (window) {
     }, {
       key: "createIframe",
       value: function createIframe(id, url, elementId) {
-        var _this3 = this;
+        var _this4 = this;
         var iframe = document.createElement('iframe');
         iframe.className = 'swh-iframe';
         iframe.id = "".concat(elementId, "-panel");
@@ -340,17 +376,26 @@ var SWH = function (window) {
         iframe.setAttribute('aria-labelledby', "".concat(elementId, "-tab"));
         iframe.style.display = 'none';
 
+        // Apply optional sandboxing
+        if (this.config.sandbox === true) {
+          iframe.setAttribute('sandbox', '');
+        } else if (typeof this.config.sandbox === 'string' && this.config.sandbox.trim()) {
+          iframe.setAttribute('sandbox', this.config.sandbox.trim());
+        }
+
         // Add load event handler
         iframe.addEventListener('load', function () {
+          iframe.classList.remove('loading');
+
           // Only mark as loaded if iframe actually has a src
           // (empty iframes fire load event too, but we don't want to mark those as loaded)
           if (iframe.getAttribute('src')) {
-            var tab = _this3.state.openTabs.find(function (t) {
+            var tab = _this4.state.openTabs.find(function (t) {
               return t.id === id;
             });
             if (tab) {
               tab.loaded = true;
-              _this3.emit('tabLoaded', {
+              _this4.emit('tabLoaded', {
                 id: id
               });
             }
@@ -443,17 +488,26 @@ var SWH = function (window) {
         tabElement.setAttribute('tabindex', '0');
         iframeElement.style.display = 'block';
 
+        // Keep the active tab visible when the tab bar overflows
+        if (typeof tabElement.scrollIntoView === 'function') {
+          tabElement.scrollIntoView({
+            block: 'nearest',
+            inline: 'nearest'
+          });
+        }
+
         // Lazy load: set src only on first activation
         // Use getAttribute to check if src attribute is actually set (not the resolved URL)
         if (!tab.loaded && !iframeElement.getAttribute('src')) {
+          iframeElement.classList.add('loading');
           iframeElement.src = tab.url;
         }
 
         // Update state
         this.state.activeTabId = id;
 
-        // Persist state
-        this.persistState();
+        // Schedule state persistence
+        this.schedulePersist();
 
         // Emit event
         this.emit('tabSwitched', {
@@ -466,13 +520,15 @@ var SWH = function (window) {
       /**
        * Close a specific tab
        * @param {string} id - Tab ID to close
+       * @param {boolean} [force=false] - Internal: bypass the last-tab guard (used by clearTabs)
        * @returns {boolean} Success status
        */
     }, {
       key: "closeTab",
       value: function closeTab(id) {
+        var force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
         // Prevent closing if only one tab remains
-        if (this.state.openTabs.length <= 1) {
+        if (!force && this.state.openTabs.length <= 1) {
           console.warn('SWH: Cannot close the last remaining tab');
           return false;
         }
@@ -508,8 +564,8 @@ var SWH = function (window) {
           }
         }
 
-        // Persist state
-        this.persistState();
+        // Schedule state persistence
+        this.schedulePersist();
 
         // Emit event
         this.emit('tabClosed', {
@@ -538,10 +594,12 @@ var SWH = function (window) {
         // Reset loaded state
         tab.loaded = false;
 
-        // Reload iframe
-        if (iframeElement.src) {
-          iframeElement.src = iframeElement.src;
-        } else {
+        // Force a fresh navigation: removing the src attribute and re-assigning
+        // it guarantees a reload even when the URL is unchanged, and works for
+        // cross-origin frames (unlike contentWindow.location.reload())
+        iframeElement.removeAttribute('src');
+        if (tab.url) {
+          iframeElement.classList.add('loading');
           iframeElement.src = tab.url;
         }
         return true;
@@ -570,18 +628,24 @@ var SWH = function (window) {
       }
 
       /**
-       * Close all tabs and clear state
+       * Close all tabs and clear state from localStorage
        */
     }, {
       key: "clearTabs",
       value: function clearTabs() {
-        // Close all tabs except the first one
+        var _this5 = this;
+        // Close every tab (force bypasses the last-tab guard)
         var tabIds = this.state.openTabs.map(function (t) {
           return t.id;
         });
-        for (var i = tabIds.length - 1; i > 0; i--) {
-          this.closeTab(tabIds[i]);
-        }
+        tabIds.forEach(function (id) {
+          return _this5.closeTab(id, true);
+        });
+        this.state.activeTabId = null;
+
+        // Cancel any pending debounced persist so it cannot re-write
+        // storage after the removeItem below
+        this.cancelScheduledPersist();
 
         // Clear localStorage
         try {
@@ -592,7 +656,52 @@ var SWH = function (window) {
       }
 
       /**
-       * Persist current state to localStorage
+       * Destroy the instance: removes all created DOM elements,
+       * clears state and event listeners, and detaches from the container.
+       * Does not touch the persisted state in localStorage.
+       */
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        // Stop pending persistence and stop listening for pagehide
+        this.cancelScheduledPersist();
+        window.removeEventListener('pagehide', this._handlePageHide);
+
+        // Remove all created tab buttons and iframes from the DOM
+        this.state.tabElements.forEach(function (element) {
+          if (element.parentNode) {
+            element.parentNode.removeChild(element);
+          }
+        });
+        this.state.iframeElements.forEach(function (element) {
+          if (element.parentNode) {
+            element.parentNode.removeChild(element);
+          }
+        });
+
+        // Reset internal state
+        this.state.openTabs = [];
+        this.state.tabElements.clear();
+        this.state.iframeElements.clear();
+        this.state.activeTabId = null;
+
+        // Drop all registered event listeners
+        this.events.clear();
+
+        // Remove the tablist role and the aria-label we applied (if any)
+        this.config.tabsContainer.removeAttribute('role');
+        if (this._ownsAriaLabel) {
+          this.config.tabsContainer.removeAttribute('aria-label');
+        }
+
+        // Detach the instance reference from the container
+        if (this.config.container._swhInstance === this) {
+          delete this.config.container._swhInstance;
+        }
+      }
+
+      /**
+       * Persist current state to localStorage immediately
        */
     }, {
       key: "persistState",
@@ -609,31 +718,82 @@ var SWH = function (window) {
       }
 
       /**
+       * Schedule a debounced persistState call (used for high-frequency
+       * operations like open/switch/close)
+       */
+    }, {
+      key: "schedulePersist",
+      value: function schedulePersist() {
+        var _this6 = this;
+        if (this._persistTimer !== null) {
+          clearTimeout(this._persistTimer);
+        }
+        this._persistTimer = setTimeout(function () {
+          _this6._persistTimer = null;
+          _this6.persistState();
+        }, 150);
+      }
+
+      /**
+       * Cancel a pending debounced persist
+       */
+    }, {
+      key: "cancelScheduledPersist",
+      value: function cancelScheduledPersist() {
+        if (this._persistTimer !== null) {
+          clearTimeout(this._persistTimer);
+          this._persistTimer = null;
+        }
+      }
+
+      /**
        * Restore state from localStorage
        * @returns {boolean} Whether state was restored
        */
     }, {
       key: "restoreState",
       value: function restoreState() {
-        var _this4 = this;
+        var _this7 = this;
         try {
           var stored = localStorage.getItem(this.config.storageKey);
           if (!stored) {
             return false;
           }
           var state = JSON.parse(stored);
-          if (!state || !Array.isArray(state.openTabs) || state.openTabs.length === 0) {
+          if (!state || !Array.isArray(state.openTabs)) {
+            return false;
+          }
+
+          // Only keep well-formed entries (id is required; title/url are
+          // coerced defensively by openTab)
+          var validTabs = state.openTabs.filter(function (tab) {
+            return tab && typeof tab.id === 'string' && tab.id.trim() !== '';
+          });
+          if (validTabs.length === 0) {
             return false;
           }
 
           // Recreate tabs from stored state
-          state.openTabs.forEach(function (tab) {
-            _this4.openTab(tab.id, tab.title, tab.url);
+          validTabs.forEach(function (tab) {
+            _this7.openTab(tab.id, tab.title, tab.url);
           });
+          if (this.state.openTabs.length === 0) {
+            // Nothing could be reopened (e.g. maxTabs is 0)
+            return false;
+          }
 
-          // Restore active tab
-          if (state.activeTabId) {
+          // Restore active tab, falling back to defaultTab, then to the
+          // first restored tab so the UI is never left blank
+          var hasActive = state.activeTabId && this.state.openTabs.some(function (t) {
+            return t.id === state.activeTabId;
+          });
+          if (hasActive) {
             this.switchTab(state.activeTabId);
+          } else {
+            var fallback = this.config.defaultTab && this.state.openTabs.some(function (t) {
+              return t.id === _this7.config.defaultTab;
+            }) ? this.config.defaultTab : this.state.openTabs[0].id;
+            this.switchTab(fallback);
           }
           return true;
         } catch (e) {
@@ -705,16 +865,29 @@ var SWH = function (window) {
    */
   function autoInit() {
     var containers = document.querySelectorAll('[data-swh]');
+    var defaultKeyUsage = 0;
     containers.forEach(function (container) {
       // Extract configuration from data attributes
+      // The legacy default key 'swh-tabs' is only kept for the first
+      // keyless container; subsequent ones get derived keys so multiple
+      // instances never overwrite each other's state
+      var storageKey = container.getAttribute('data-swh-storage-key');
+      if (!storageKey) {
+        defaultKeyUsage++;
+        storageKey = defaultKeyUsage === 1 ? 'swh-tabs' : "swh-tabs-".concat(defaultKeyUsage);
+      }
+      var maxTabsAttr = parseInt(container.getAttribute('data-swh-max-tabs'), 10);
+      var sandboxAttr = container.getAttribute('data-swh-sandbox');
       var config = {
         container: container,
         tabsContainer: container.querySelector('[data-swh-tabs]'),
         contentContainer: container.querySelector('[data-swh-content]'),
-        storageKey: container.getAttribute('data-swh-storage-key') || 'swh-tabs',
+        storageKey: storageKey,
         defaultTab: container.getAttribute('data-swh-default-tab') || null,
         allowClose: container.hasAttribute('data-swh-allow-close'),
-        maxTabs: parseInt(container.getAttribute('data-swh-max-tabs')) || Infinity
+        maxTabs: maxTabsAttr !== null && !isNaN(maxTabsAttr) && maxTabsAttr >= 0 ? maxTabsAttr : Infinity,
+        sandbox: sandboxAttr === null ? false : sandboxAttr.trim() ? sandboxAttr.trim() : true,
+        tabsLabel: container.getAttribute('data-swh-tabs-label') || undefined
       };
 
       // Discover preset tabs from existing markup
@@ -735,6 +908,11 @@ var SWH = function (window) {
           // Remove original elements (will be recreated by SWH)
           button.parentNode.removeChild(button);
           iframe.parentNode.removeChild(iframe);
+        } else {
+          // Orphan tab button without matching iframe: SWH cannot
+          // manage it, so remove it instead of leaving dead markup
+          console.warn("SWH: No iframe found for tab \"".concat(id, "\"; removing orphan tab button"));
+          button.parentNode.removeChild(button);
         }
       });
       config.presetTabs = presetTabs;
